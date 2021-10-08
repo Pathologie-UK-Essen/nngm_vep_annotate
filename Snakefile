@@ -6,16 +6,23 @@ configfile: "config.yaml"
 
 samples = {
     file.strip(".vcf"): os.path.join(root, file)
-    for root, _, files in os.walk(config["input_path"])
+    for root, _, files in os.walk(config["general"]["input_path"])
     for file in files
     if file.endswith(".vcf")
-    and (time.time() - os.path.getmtime(os.path.join(root, file)) > 300)
+    and (
+        time.time() - os.path.getmtime(os.path.join(root, file))
+        > config["general"]["file_age"] * 60
+    )
 }
 
 
 rule all:
     input:
-        expand("annotated/{sample}.annotated.vcf", sample=samples.keys()),
+        expand(
+            "{output_dir}/{sample}.annotated.vcf",
+            output_dir=config["general"]["output_path"],
+            sample=samples.keys(),
+        ),
 
 
 rule annotate_variants:
@@ -25,7 +32,9 @@ rule annotate_variants:
         plugins="resources/vep/plugins",
         fasta="refs/genome.fasta",
     output:
-        calls="annotated/{sample}.annotated.vcf",
+        calls="{output_dir}/{{sample}}.annotated.vcf".format(
+            output_dir=config["general"]["output_path"]
+        ),
         stats=temp("annotated/{sample}.stats.html"),
     params:
         # Pass a list of plugins to use, see https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
