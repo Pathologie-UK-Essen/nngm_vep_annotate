@@ -1,4 +1,6 @@
 import time
+
+
 configfile: "config.yaml"
 
 
@@ -6,8 +8,10 @@ samples = {
     file.strip(".vcf"): os.path.join(root, file)
     for root, _, files in os.walk(config["input_path"])
     for file in files
-    if file.endswith(".vcf") and (time.time() - os.path.getmtime(os.path.join(root, file)) > 300)
+    if file.endswith(".vcf")
+    and (time.time() - os.path.getmtime(os.path.join(root, file)) > 300)
 }
+
 
 rule all:
     input:
@@ -19,7 +23,7 @@ rule annotate_variants:
         calls=lambda wc: samples[wc.sample],
         cache="resources/vep/cache",
         plugins="resources/vep/plugins",
-        fasta="refs/genome.fasta"
+        fasta="refs/genome.fasta",
     output:
         calls="annotated/{sample}.annotated.vcf",
         stats=temp("annotated/{sample}.stats.html"),
@@ -27,9 +31,7 @@ rule annotate_variants:
         # Pass a list of plugins to use, see https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
         # Plugin args can be added as well, e.g. via an entry "MyPlugin,1,FOO", see docs.
         plugins=config["annotations"]["vep"]["plugins"],
-        extra="{}".format(
-            config["annotations"]["vep"]["params"]
-        ),
+        extra="{}".format(config["annotations"]["vep"]["params"]),
     log:
         "logs/vep/{sample}.annotate.log",
     threads: max(workflow.cores / len(samples), 1) if len(samples) else 1
@@ -39,13 +41,13 @@ rule annotate_variants:
 
 rule filter_by_annotation:
     input:
-        "get_annotated_bcf",
+        "annotated/{sample}.annotated.vcf",
     output:
-        "results/calls/{group}.{filter}.filtered_ann.bcf",
+        "annotated/{sample}.annotated.filtered_ann.vcf",
     log:
-        "logs/filter-calls/annotation/{group}.{filter}.log",
+        "logs/filter-calls/annotation/{sample}.log",
     params:
-        filter=lambda w: config["calling"]["filter"][w.filter],
+        filter=lambda w: config["filter"],
     conda:
         "../envs/vembrane.yaml"
     shell:
@@ -54,17 +56,18 @@ rule filter_by_annotation:
 
 rule get_genome:
     output:
-        "refs/genome.fasta"
+        "refs/genome.fasta",
     params:
         species=config["ref"]["species"],
         datatype="dna",
         build=config["ref"]["build"],
         release=config["ref"]["release"],
     log:
-        "logs/get_genome.log"
+        "logs/get_genome.log",
     cache: True  # save space and time with between workflow caching (see docs)
     wrapper:
         "0.78.0/bio/reference/ensembl-sequence"
+
 
 rule get_vep_cache:
     output:
