@@ -1,3 +1,4 @@
+import time
 configfile: "config.yaml"
 
 
@@ -5,10 +6,8 @@ samples = {
     file.strip(".vcf"): os.path.join(root, file)
     for root, _, files in os.walk(config["input_path"])
     for file in files
-    if file.endswith(".vcf")
+    if file.endswith(".vcf") and (time.time() - os.path.getmtime(os.path.join(root, file)) > 300)
 }
-
-print(samples)
 
 rule all:
     input:
