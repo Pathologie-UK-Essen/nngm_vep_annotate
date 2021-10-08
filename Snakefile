@@ -71,7 +71,7 @@ rule filter_by_annotation:
     params:
         filter=lambda w: config["filter"],
     conda:
-        "../envs/vembrane.yaml"
+        "envs/vembrane.yaml"
     shell:
         "vembrane filter {params.filter:q} {input} --annotation-key CSQ --output-fmt vcf --output {output} &> {log}"
 
