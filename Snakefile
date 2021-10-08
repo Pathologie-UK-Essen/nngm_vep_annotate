@@ -5,12 +5,15 @@ configfile: "config.yaml"
 
 
 samples = {
-    file.strip(".vcf"): os.path.join(root, file)
+    filename.strip(".vcf")
+    .replace(" ", "_")
+    .replace("(", "")
+    .replace(")", ""): [os.path.join(root, filename)]
     for root, _, files in os.walk(config["general"]["input_path"])
-    for file in files
-    if file.endswith(".vcf")
+    for filename in files
+    if filename.endswith(".vcf")
     and (
-        time.time() - os.path.getmtime(os.path.join(root, file))
+        time.time() - os.path.getmtime(os.path.join(root, filename))
         > config["general"]["file_age"] * 60
     )
 }
@@ -25,9 +28,18 @@ rule all:
         ),
 
 
+rule rename_files:
+    input:
+        lambda wc: samples[wc.sample],
+    output:
+        temp("tmp/{sample}.vcf"),
+    shell:
+        "cp {input} {output}"
+
+
 rule annotate_variants:
     input:
-        calls=lambda wc: samples[wc.sample],
+        calls="tmp/{sample}.vcf",
         cache="resources/vep/cache",
         plugins="resources/vep/plugins",
         fasta="refs/genome.fasta",
@@ -60,7 +72,7 @@ rule filter_by_annotation:
     conda:
         "../envs/vembrane.yaml"
     shell:
-        "vembrane filter {params.filter:q} {input} --output-fmt bcf --output {output} &> {log}"
+        "vembrane filter {params.filter:q} {input} --output-fmt vcf --output {output} &> {log}"
 
 
 rule get_genome:
