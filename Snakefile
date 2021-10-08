@@ -56,7 +56,7 @@ rule annotate_variants:
         "logs/vep/{sample}.annotate.log",
     threads: max(workflow.cores / len(samples), 1) if len(samples) else 1
     wrapper:
-        "0.78.0/bio/vep/annotate"
+        "master/bio/vep/annotate"
 
 
 rule filter_by_annotation:
