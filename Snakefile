@@ -95,7 +95,7 @@ rule get_vep_cache:
     output:
         directory("resources/vep/cache"),
     params:
-        species=config["ref"]["species"],
+        species="{}_refseq".format(config["ref"]["species"]),
         build=config["ref"]["build"],
         release=config["ref"]["release"],
     log:
