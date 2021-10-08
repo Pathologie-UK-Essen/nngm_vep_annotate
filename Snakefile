@@ -28,13 +28,14 @@ rule all:
         ),
 
 
-rule rename_files:
+rule remove_special_chars:
     input:
         lambda wc: samples[wc.sample],
     output:
-        temp("tmp/{sample}.vcf"),
+        pipe("tmp/{sample}.vcf"),
+    threads: workflow.cores - 1
     shell:
-        "cp {input} {output}"
+        "cat '{input}' > {output}"
 
 
 rule annotate_variants:
