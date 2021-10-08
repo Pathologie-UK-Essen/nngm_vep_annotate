@@ -22,7 +22,7 @@ samples = {
 rule all:
     input:
         expand(
-            "{output_dir}/{sample}.annotated.vcf",
+            "{output_dir}/{sample}.annotated.filtered_ann.vcf",
             output_dir=config["general"]["output_path"],
             sample=samples.keys(),
         ),
@@ -45,9 +45,7 @@ rule annotate_variants:
         plugins="resources/vep/plugins",
         fasta="refs/genome.fasta",
     output:
-        calls="{output_dir}/{{sample}}.annotated.vcf".format(
-            output_dir=config["general"]["output_path"]
-        ),
+        calls=temp("annotated/{sample}.annotated.vcf"),
         stats=temp("annotated/{sample}.stats.html"),
     params:
         # Pass a list of plugins to use, see https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
@@ -65,7 +63,9 @@ rule filter_by_annotation:
     input:
         "annotated/{sample}.annotated.vcf",
     output:
-        "annotated/{sample}.annotated.filtered_ann.vcf",
+        "{output_dir}/{{sample}}.annotated.filtered_ann.vcf".format(
+            output_dir=config["general"]["output_path"]
+        ),
     log:
         "logs/filter-calls/annotation/{sample}.log",
     params:
@@ -73,7 +73,7 @@ rule filter_by_annotation:
     conda:
         "../envs/vembrane.yaml"
     shell:
-        "vembrane filter {params.filter:q} {input} --output-fmt vcf --output {output} &> {log}"
+        "vembrane filter {params.filter:q} {input} --annotation-key CSQ --output-fmt vcf --output {output} &> {log}"
 
 
 rule get_genome:
