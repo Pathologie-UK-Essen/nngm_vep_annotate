@@ -22,9 +22,10 @@ if [ $(crontab -l | grep snakefile_vep | wc -l) -eq 0 ]; then
     if [ $(uname) = "Darwin" ] && [ $(uname -m) = "arm64" ]; then
         CONDA_SUBDIR="CONDA_SUBDIR=osx-64"
     fi
-    echo "47 * * * * (eval "$(conda shell.bash activate vep_annotation)" && cd $(pwd) && $CONDA_SUBDIR snakemake -s snakefile_vep.smk --use-conda --conda-frontend mamba -j 1 -p) >> $(pwd)/workflow.log 2>&1" >>updated_cronjob
-    crontab updated_cronjob
-    rm updated_cronjob
+    echo "SHELL=/bin/bash" >>update_cronjob
+    echo "47 * * * * (eval "$(conda shell.bash activate vep_annotation)" && cd $(pwd) && $CONDA_SUBDIR snakemake -s snakefile_vep.smk --use-conda --conda-frontend mamba -j 1 -p) >> $(pwd)/workflow.log 2>&1" >>update_cronjob
+    crontab update_cronjob
+    rm update_cronjob
 fi
 
 echo "Workflow successfully initialized. If anything failes please file an issue on https://github.com/FelixMoelder/nngm_vep_annotate."
