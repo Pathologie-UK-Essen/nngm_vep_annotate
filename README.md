@@ -12,7 +12,7 @@ This workflow annotates vcf files as definied by the nNGM-project.
 ### Clone this repository git clone
 `https://github.com/FelixMoelder/nngm_vep_annotate`
 
-### [Optional] Set input- and output-directories
+### [Optional] Change default input- and output-directories
 
 By default vcf-files need to be placed in a subdirectory called `input` and will be written to an `output` folder.
 An alternative input- and output-path can be set in `config.yaml`. Paths can be relative and absolute.
@@ -21,8 +21,7 @@ An alternative input- and output-path can be set in `config.yaml`. Paths can be 
 `chmod +x init_cronjob.sh`
 
 ### Setup a cronjob by calling
-This will create initialize a conda environment and setup a cronjob executing the workflow once an hour:
+
+To initialize a conda environment and setup a cronjob executeing the workflow once an hour call:
 
 `sh ./init_cronjob.sh`
-
-
