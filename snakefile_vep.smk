@@ -77,7 +77,7 @@ rule filter_by_annotation:
     conda:
         "envs/vembrane.yaml"
     shell:
-        "vembrane filter {params.filter:q} {input} --annotation-key CSQ --output-fmt vcf --output {output} &> {log}"
+        "vembrane filter {params.filter:q} {input} --output-fmt vcf --output {output} &> {log}"
 
 
 rule get_genome:
