@@ -4,11 +4,15 @@ import time
 configfile: "config.yaml"
 
 
+def replace_special_chars(filename):
+    special_chars = [(" ", "_"), ("(", ""), (")", "")]
+    for key, value in special_chars:
+        filename = filename.replace(key, value)
+    return filename
+
+
 samples = {
-    filename.strip(".vcf")
-    .replace(" ", "_")
-    .replace("(", "")
-    .replace(")", ""): [os.path.join(root, filename)]
+    replace_special_chars(filename): [os.path.join(root, filename)]
     for root, _, files in os.walk(config["general"]["input_path"])
     for filename in files
     if filename.endswith(".vcf")
