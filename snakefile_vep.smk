@@ -12,10 +12,10 @@ def replace_special_chars(filename):
 
 
 samples = {
-    replace_special_chars(filename): [os.path.join(root, filename)]
+    replace_special_chars(filename[:-4]): os.path.join(root, filename)
     for root, _, files in os.walk(config["general"]["input_path"])
     for filename in files
-    if filename.endswith(".vcf")
+    if (filename.endswith(".vcf") or filename.endswith(".bcf"))
     and (
         time.time() - os.path.getmtime(os.path.join(root, filename))
         > config["general"]["file_age"] * 60
@@ -32,22 +32,12 @@ rule all:
         ),
 
 
-rule remove_special_chars:
-    input:
-        lambda wc: samples[wc.sample],
-    output:
-        pipe("tmp/{sample}.vcf"),
-    threads: workflow.cores - 1
-    shell:
-        "cat '{input}' > {output}"
-
-
 rule annotate_variants:
     input:
-        calls="tmp/{sample}.vcf",
+        calls=lambda wc: samples[wc.sample],
         cache="resources/vep/cache",
         plugins="resources/vep/plugins",
-        fasta="refs/genome.fasta",
+        fasta="resources/genome.fasta",
     output:
         calls=temp("annotated/{sample}.annotated.vcf"),
         stats=temp("annotated/{sample}.stats.html"),
@@ -60,7 +50,7 @@ rule annotate_variants:
         "logs/vep/{sample}.annotate.log",
     threads: max(workflow.cores / len(samples), 1) if len(samples) else 1
     wrapper:
-        "master/bio/vep/annotate"
+        "0.79.0/bio/vep/annotate"
 
 
 rule filter_by_annotation:
@@ -82,7 +72,7 @@ rule filter_by_annotation:
 
 rule get_genome:
     output:
-        "refs/genome.fasta",
+        "resources/genome.fasta",
     params:
         species=config["ref"]["species"],
         datatype="dna",
@@ -92,7 +82,7 @@ rule get_genome:
         "logs/get_genome.log",
     cache: True  # save space and time with between workflow caching (see docs)
     wrapper:
-        "0.78.0/bio/reference/ensembl-sequence"
+        "0.79.0/bio/reference/ensembl-sequence"
 
 
 rule get_vep_cache:
@@ -106,7 +96,7 @@ rule get_vep_cache:
         "logs/vep/cache.log",
     cache: True  # save space and time with between workflow caching (see docs)
     wrapper:
-        "0.78.0/bio/vep/cache"
+        "0.79.0/bio/vep/cache"
 
 
 rule get_vep_plugins:
@@ -117,4 +107,4 @@ rule get_vep_plugins:
     log:
         "logs/vep/plugins.log",
     wrapper:
-        "0.78.0/bio/vep/plugins"
+        "0.79.0/bio/vep/plugins"
