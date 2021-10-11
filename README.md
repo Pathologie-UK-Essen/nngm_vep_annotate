@@ -1,6 +1,6 @@
 # nNGM variant file annotation
 
-This workflow annotates vcf files as definied by by nNGM-Project.
+This workflow annotates vcf files as definied by nNGM-project.
 
 
 ## Requirements
