@@ -32,9 +32,22 @@ rule all:
         ),
 
 
+rule add_allelic_fields:
+    input:
+        samples[wc.sample],
+    output:
+        temp("annotated/{sample}.fields_added.vcf"),
+    log:
+        "logs/add_fields/{sample}.log",
+    conda:
+        "envs/rust-script.yaml"
+    script:
+        "scripts/add_allelic_fields.rs"
+
+
 rule annotate_variants:
     input:
-        calls=lambda wc: samples[wc.sample],
+        calls="annotated/{sample}.fields_added.vcf",
         cache="resources/vep/cache",
         plugins="resources/vep/plugins",
         fasta="resources/genome.fasta",
