@@ -34,7 +34,7 @@ rule all:
 
 rule add_allelic_fields:
     input:
-        samples[wc.sample],
+        lambda wc: samples[wc.sample],
     output:
         temp("annotated/{sample}.fields_added.vcf"),
     log:
