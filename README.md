@@ -10,7 +10,7 @@ This workflow annotates vcf files as definied by the nNGM-project.
 ## Setup
 
 ### Clone this repository git clone
-`https://github.com/FelixMoelder/nngm_vep_annotate`
+`git clone https://github.com/FelixMoelder/nngm_vep_annotate`
 
 ### [Optional] Change default input- and output-directories
 
