@@ -42,7 +42,7 @@ rule add_allelic_fields:
     conda:
         "envs/rust-script.yaml"
     script:
-        "scripts/add_allelic_fields.rs"
+        "scripts/generalize_allelic_fields.rs"
 
 
 rule annotate_variants:
