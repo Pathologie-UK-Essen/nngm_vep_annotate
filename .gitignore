@@ -130,3 +130,6 @@ dmypy.json
 
 # Snakemake
 .snakemake
+
+# Custom
+ship_token.txt

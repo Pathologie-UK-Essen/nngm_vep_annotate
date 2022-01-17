@@ -23,7 +23,7 @@ if [ $(crontab -l | grep snakefile_vep | wc -l) -eq 0 ]; then
         CONDA_SUBDIR="CONDA_SUBDIR=osx-64"
     fi
     echo "SHELL=/bin/bash" >>update_cronjob
-    echo "47 * * * * (eval "$(conda shell.bash activate vep_annotation)" && cd $(pwd) && $CONDA_SUBDIR snakemake -s snakefile_vep.smk --use-conda --conda-frontend mamba -j 1 -p) >> $(pwd)/workflow.log 2>&1" >>update_cronjob
+    echo "47 * * * * (eval "$(conda shell.bash activate vep_annotation)" && cd $(pwd) && $CONDA_SUBDIR snakemake -s workflow/snakefile_vep.smk --use-conda --conda-frontend mamba -j 1 -p) >> $(pwd)/workflow.log 2>&1" >>update_cronjob
     crontab update_cronjob
     rm update_cronjob
 fi
