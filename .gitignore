@@ -132,4 +132,5 @@ dmypy.json
 .snakemake
 
 # Custom
+config/
 ship_token.txt

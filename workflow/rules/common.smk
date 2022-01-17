@@ -1,5 +1,6 @@
 import requests
 
+
 def update_token():
     with open(config["ship"]["token_path"], "r+") as f:
         token = f.read().strip()
