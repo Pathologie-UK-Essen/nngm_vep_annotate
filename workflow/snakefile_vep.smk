@@ -22,10 +22,9 @@ samples = {
     )
 }
 
-nngm_samples = dict(filter(lambda val: "NNGML2-1V3" in val[0], samples.items()))
-
 
 include: "rules/annotation.smk"
+
 
 rule all:
     input:
