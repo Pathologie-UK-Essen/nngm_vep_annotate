@@ -11,7 +11,7 @@ This workflow annotates vcf/bcf files applying [VEP]((https://www.ensembl.org/in
 ## Setup
 
 ### Clone this repository git clone
-`git clone https://github.com/FelixMoelder/nngm_vep_annotate`
+`git clone https://github.com/Pathologie-UK-Essen/nngm_vep_annotate.git`
 
 ### [Optional] Change default input- and output-directories
 
