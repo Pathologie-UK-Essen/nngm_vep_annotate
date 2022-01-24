@@ -7,9 +7,9 @@ rule add_allelic_fields:
     log:
         "logs/add_fields/{sample}.log",
     conda:
-        "envs/rust-script.yaml"
+        "../envs/rust-script.yaml"
     script:
-        "scripts/generalize_allelic_fields.rs"
+        "../scripts/generalize_allelic_fields.rs"
 
 
 rule annotate_variants:
@@ -45,7 +45,7 @@ rule filter_by_annotation:
     params:
         filter=lambda w: config["filter"],
     conda:
-        "envs/vembrane.yaml"
+        "../envs/vembrane.yaml"
     shell:
         "vembrane filter {params.filter:q} {input} --output-fmt vcf --output {output} &> {log}"
 
