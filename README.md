@@ -1,6 +1,6 @@
 # nNGM variant file annotation
 
-This workflow annotates vcf files as definied by the nNGM-project.
+This workflow annotates vcf/bcf files applying [VEP]((https://www.ensembl.org/info/docs/tools/vep/index.html)) as defined by the nNGM-project. 
 
 
 ## Requirements
