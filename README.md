@@ -23,6 +23,6 @@ An alternative input- and output-path can be set in `config.yaml`. Paths can be 
 
 ### Setup a cronjob by calling
 
-To initialize a conda environment and setup a cronjob executeing the workflow once an hour call:
+To initialize a conda environment and setup a cronjob executing the workflow once an hour call:
 
 `sh ./init_cronjob.sh`
