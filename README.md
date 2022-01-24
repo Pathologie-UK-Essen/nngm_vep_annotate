@@ -5,6 +5,7 @@ This workflow annotates vcf files as definied by the nNGM-project.
 
 ## Requirements
 
+* Linux (recommended) or macOS
 * [Mambaforge](https://github.com/conda-forge/miniforge#mambaforge)
 * on Apple Silicon devices [Rosetta2](https://support.apple.com/en-us/HT211861) needs to be installed
 ## Setup
