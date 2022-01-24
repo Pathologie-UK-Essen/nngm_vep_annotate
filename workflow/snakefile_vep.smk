@@ -10,7 +10,8 @@ def replace_special_chars(filename):
         filename = filename.replace(key, value)
     return filename
 
-#TODO Limit to nNGM-Files only
+
+# TODO Limit to nNGM-Files only
 samples = {
     replace_special_chars(filename[:-4]): os.path.join(root, filename)
     for root, _, files in os.walk(config["general"]["input_path"])
@@ -23,11 +24,7 @@ samples = {
 }
 
 
-include: "rules/common.smk"
 include: "rules/annotation.smk"
-
-#TODO Reenable when transfer is implemented
-#update_token()
 
 
 rule all:
