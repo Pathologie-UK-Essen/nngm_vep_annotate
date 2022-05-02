@@ -22,13 +22,11 @@ fn main() -> Result<()> {
     for result in bcf_in.records() {
         let mut record = result?;
         bcf_out.translate(&mut record);
-        let field_values = record.format(b"CLCAD2").integer()?;
-        let allelic_fraction = field_values
-            .iter()
-            .map(|&allelic_depth| allelic_depth[1] as f32 / allelic_depth[0] as f32)
-            .collect::<Vec<f32>>();
-        record.push_format_integer(b"AD", &field_values.concat())?;
-        record.push_format_float(b"AF", &allelic_fraction)?;
+        let dp_field = record.format(b"DP").integer()?;
+        let clcad2_field = record.format(b"CLCAD2").integer()?;
+        let allelic_fraction = clcad2_field[0][1] as f32 / dp_field[0][0] as f32;
+        record.push_format_integer(b"AD", &clcad2_field.concat())?;
+        record.push_format_float(b"AF", &[allelic_fraction])?;
         bcf_out.write(&record)?;
     }
     Ok(())
