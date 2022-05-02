@@ -1,7 +1,20 @@
 
-rule add_allelic_fields:
+rule split_multi_allelic:
     input:
         lambda wc: samples[wc.sample],
+    output:
+        temp("split_multi_allelic/{sample}.vcf")
+    conda:
+        "../envs/bcftools.yaml"
+    log:
+        "logs/split_multi_allelic/{sample}.log"
+    shell:
+        "bcftools norm -m- {input:q} -o {output} &> {log}"
+
+
+rule add_allelic_fields:
+    input:
+        "split_multi_allelic/{sample}.vcf",
     output:
         temp("annotated/{sample}.fields_added.vcf"),
     log:
