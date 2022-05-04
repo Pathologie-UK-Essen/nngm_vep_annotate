@@ -3,7 +3,7 @@ rule split_multi_allelic:
     input:
         lambda wc: samples[wc.sample],
     output:
-        temp("split_multi_allelic/{sample}.vcf")
+        temp("results/split_multi_allelic/{sample}.vcf")
     conda:
         "../envs/bcftools.yaml"
     log:
@@ -14,9 +14,9 @@ rule split_multi_allelic:
 
 rule add_allelic_fields:
     input:
-        "split_multi_allelic/{sample}.vcf",
+        "results/split_multi_allelic/{sample}.vcf",
     output:
-        temp("annotated/{sample}.fields_added.vcf"),
+        temp("results/annotated/{sample}.fields_added.vcf"),
     log:
         "logs/add_fields/{sample}.log",
     conda:
@@ -27,13 +27,13 @@ rule add_allelic_fields:
 
 rule annotate_variants:
     input:
-        calls="annotated/{sample}.fields_added.vcf",
+        calls="results/annotated/{sample}.fields_added.vcf",
         cache="resources/vep/cache",
         plugins="resources/vep/plugins",
         fasta="resources/genome.fasta",
     output:
-        calls=temp("annotated/{sample}.annotated.vcf"),
-        stats=temp("annotated/{sample}.stats.html"),
+        calls=temp("results/annotated/{sample}.annotated.vcf"),
+        stats=temp("results/annotated/{sample}.stats.html"),
     params:
         # Pass a list of plugins to use, see https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
         # Plugin args can be added as well, e.g. via an entry "MyPlugin,1,FOO", see docs.
@@ -48,7 +48,7 @@ rule annotate_variants:
 
 rule filter_by_annotation:
     input:
-        "annotated/{sample}.annotated.vcf",
+        "results/annotated/{sample}.annotated.vcf",
     output:
         "{output_dir}/{{sample}}.annotated.filtered_ann.vcf".format(
             output_dir=config["general"]["output_path"]
