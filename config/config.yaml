@@ -17,9 +17,9 @@ annotations:
   vep:
     # Consider removing --everything if VEP is slow for you (e.g. for WGS), 
     # and think carefully about which annotations you need.
-    params: "--hgvsg --hgvs --refseq --canonical"
+    params: "--hgvsg --hgvs --refseq --canonical  --check_ref --dont_skip"
     plugins: ""
       # Add any plugin from https://www.ensembl.org/info/docs/tools/vep/script/vep_plugins.html
       # Plugin args can be passed as well, e.g. "LoFtool,path/to/custom/scores.txt".
 
-filter: "any(entry in ANN['Feature'] for entry in ['NM_002529', 'NM_006180', 'NM_001012338', 'NM_020975', 'NM_005343', 'NM_000455', 'NM_203500', 'NM_004304', 'NM_004333', 'NM_001904', 'NM_005228', 'NM_023110', 'NM_022970', 'NM_000142', 'NM_213647', 'NM_004448', 'NM_033360', 'NM_002755', 'NM_001127500', 'NM_002524', 'NM_006218', 'NM_000314', 'NM_000546', 'NM_002944', 'NM_005896', 'NM_002168']) or ('NM_000141' in ANN['Feature'] and ANN['EXON'] == '8/18')"
+filter: "any(entry in ANN['Feature'] for entry in ['NM_002529', 'NM_006180', 'NM_001012338', 'NM_020975', 'NM_005343', 'NM_000455', 'NM_203500', 'NM_004304', 'NM_004333', 'NM_001904', 'NM_005228', 'NM_023110', 'NM_000141', 'NM_000142', 'NM_213647', 'NM_004448', 'NM_033360', 'NM_002755', 'NM_001127500', 'NM_002524', 'NM_006218', 'NM_000314', 'NM_000546', 'NM_002944', 'NM_005896', 'NM_002168']) or ('NM_022970' in ANN['Feature'] and ANN['EXON'] == '8/18')"
