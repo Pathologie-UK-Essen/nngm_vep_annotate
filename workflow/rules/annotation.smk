@@ -43,7 +43,7 @@ rule annotate_variants:
         "logs/vep/{sample}.annotate.log",
     threads: max(workflow.cores / len(samples), 1) if len(samples) else 1
     wrapper:
-        "0.79.0/bio/vep/annotate"
+        "v2.9.1/bio/vep/annotate"
 
 
 rule filter_by_annotation:
@@ -75,7 +75,7 @@ rule get_genome:
         "logs/get_genome.log",
     cache: True  # save space and time with between workflow caching (see docs)
     wrapper:
-        "0.79.0/bio/reference/ensembl-sequence"
+        "v2.9.1/bio/reference/ensembl-sequence"
 
 
 rule get_vep_cache:
@@ -89,7 +89,7 @@ rule get_vep_cache:
         "logs/vep/cache.log",
     cache: True  # save space and time with between workflow caching (see docs)
     wrapper:
-        "0.79.0/bio/vep/cache"
+        "v2.9.1/bio/vep/cache"
 
 
 rule get_vep_plugins:
@@ -100,4 +100,4 @@ rule get_vep_plugins:
     log:
         "logs/vep/plugins.log",
     wrapper:
-        "0.79.0/bio/vep/plugins"
+        "v2.9.1/bio/vep/plugins"
